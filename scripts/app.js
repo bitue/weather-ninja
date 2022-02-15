@@ -3,11 +3,12 @@
 const cityName = document.getElementById('city');     
 const btn =document.getElementById('btn');
 const template =document.getElementById('template');
-const temp = document.getElementById('temp')
+const temp = document.getElementById('temp');
+const forecast = new Forecast()
 
 
 const updateUI =(data) => {
-
+    console.log(data,';;;;;;;;;;;;;;;;;;;;;')
     const cityDetails = data.cityDetails ;
     const weather = data.currentWeather ;
   
@@ -31,23 +32,13 @@ const updateUI =(data) => {
 
 
 
-async function updataCity (city) {
-    //get city key
-    const cityDetails = await getData(city);
-
-    //get the current weather key
-    const currentWeather = await getCurrentLocation(cityDetails.Key);
-
-    return {
-        cityDetails , currentWeather
-    }
-}
 btn.addEventListener('click', ()=> {
     console.log(cityName.value);
     const city = cityName.value;
+    console.log(city)
     localStorage.setItem('city', city)
 
-    updataCity(city)
+    forecast.updateCity(city)
         .then(data => updateUI(data))
         .catch(err => console.log(err))
 
@@ -55,7 +46,7 @@ btn.addEventListener('click', ()=> {
 })
 
 if(localStorage.getItem('city')) {
-    updataCity(localStorage.getItem('city'))
-    .then(data => updateUI(data))
-    .then(err => console.log(err))
+    forecast.updateCity(localStorage.getItem('city'))
+        .then(data => updateUI(data))
+        .then(err => console.log(err))
 }
